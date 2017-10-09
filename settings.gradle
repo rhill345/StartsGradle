@@ -1,0 +1,6 @@
+rootProject.name = 'starts'
+include ':starts-core'
+include ':starts-maven-plugin'
+
+project(':starts-core').projectDir = "$rootDir/starts-core" as File
+project(':starts-maven-plugin').projectDir = "$rootDir/starts-plugin" as File

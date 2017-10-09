@@ -1,0 +1,17 @@
+-- Implement force-failing option like in Ekstazi
+
+-- make JDeps parsing incremental
+
+-- make updating of zlc file inremental
+
+-- fix CLZ
+
+-- hide options from surefire
+
+-- implement ZLCJ and CLZJ
+
+-- Gradle Plugin
+
+-- Support TestNG
+
+-- Use some shared constant for the filters that we pass to jdeps

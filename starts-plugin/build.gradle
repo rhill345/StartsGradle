@@ -1,0 +1,5 @@
+
+description = 'STARTS Maven Plugin'
+dependencies {
+  compile project(':starts-core')
+}

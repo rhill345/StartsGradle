@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="edu.illinois.starts.helpers.WriterTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2017-10-08T16:42:06" hostname="Randys-Air.home" time="0.187">
+  <properties/>
+  <testcase name="testWriteToFile" classname="edu.illinois.starts.helpers.WriterTest" time="0.035"/>
+  <testcase name="testWriteTCSimple" classname="edu.illinois.starts.helpers.WriterTest" time="0.003"/>
+  <testcase name="testWriteGraph" classname="edu.illinois.starts.helpers.WriterTest" time="0.11"/>
+  <testcase name="testWriteGrpahWithMultipleEdges" classname="edu.illinois.starts.helpers.WriterTest" time="0.008"/>
+  <testcase name="testWriteGraphWithRepeatedEdges" classname="edu.illinois.starts.helpers.WriterTest" time="0.005"/>
+  <testcase name="testWriteClassPath" classname="edu.illinois.starts.helpers.WriterTest" time="0.004"/>
+  <testcase name="testMultipleClassPath" classname="edu.illinois.starts.helpers.WriterTest" time="0.003"/>
+  <testcase name="testPathToString" classname="edu.illinois.starts.helpers.WriterTest" time="0.004"/>
+  <testcase name="testEmptyPathToString" classname="edu.illinois.starts.helpers.WriterTest" time="0.001"/>
+  <testcase name="testSinglePathToString" classname="edu.illinois.starts.helpers.WriterTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

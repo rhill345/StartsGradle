@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2015 - Present. The STARTS Team. All Rights Reserved.
+  -->
+
+<lifecycles>
+    <lifecycle>
+        <id>starts</id>
+        <phases>
+            <phase>
+                <id>process-test-classes</id>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </phase>
+            <phase>
+                <id>test</id>
+            </phase>
+        </phases>
+    </lifecycle>
+</lifecycles>
