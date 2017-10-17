@@ -9,6 +9,8 @@ import org.gradle.api.Project;
 public class StartsPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
-        project.getTasks().create("diff", DiffTask.class);
+        project.getTasks().create("sdiff", DiffTask.class);//.
+                //dependsOn(project.getTasks().findByName(""));
+        project.getTasks().create("sclean", CleanTask.class);
     }
 }

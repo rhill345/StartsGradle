@@ -8,6 +8,7 @@ import edu.illinois.starts.helpers.Writer;
 import edu.illinois.starts.maven.AgentLoader;
 import edu.illinois.starts.util.Logger;
 import edu.illinois.starts.util.Pair;
+import org.gradle.api.tasks.TaskAction;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ public class RunTask extends DiffTask {
     protected Set<String> changedClasses;
     private Logger logger;
 
+    @TaskAction
     public void executeTask() throws Exception {
         Logger.getGlobal().setLoggingLevel(Level.parse(mExtention.getLoggingLevel()));
         logger = Logger.getGlobal();

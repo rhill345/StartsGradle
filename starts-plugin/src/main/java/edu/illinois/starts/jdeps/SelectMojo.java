@@ -21,14 +21,14 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 /**
  * Finds tests affected by a change but does not run them.
  */
-@Mojo(name = "select", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(phase = LifecyclePhase.TEST_COMPILE)
+//@Mojo(name = "select", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
+//@Execute(phase = LifecyclePhase.TEST_COMPILE)
 public class SelectMojo extends DiffMojo {
-    /**
+  /*  *//**
      * Set this to "true" to update test dependencies on disk. The default value of
      * "false" is useful for "dry runs" where one may want to see the affected
      * tests, without updating test dependencies.
-     */
+     *//*
     @Parameter(property = "updateSelectChecksums", defaultValue = "false")
     private boolean updateSelectChecksums;
 
@@ -63,5 +63,5 @@ public class SelectMojo extends DiffMojo {
         long endUpdate = System.currentTimeMillis();
         logger.log(Level.FINE, "[PROFILE] STARTS-MOJO-UPDATE-TIME: " + Writer.millsToSeconds(endUpdate - startUpdate));
         return affectedTests;
-    }
+    }*/
 }

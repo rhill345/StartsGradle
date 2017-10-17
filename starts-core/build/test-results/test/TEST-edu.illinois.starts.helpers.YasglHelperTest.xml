@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.illinois.starts.helpers.YasglHelperTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2017-10-08T16:42:06" hostname="Randys-Air.home" time="0.016">
+<testsuite name="edu.illinois.starts.helpers.YasglHelperTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2017-10-14T23:06:21" hostname="Randys-MacBook-Air.local" time="0.022">
   <properties/>
-  <testcase name="addEdgeToGraphTest" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.001"/>
+  <testcase name="addEdgeToGraphTest" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.002"/>
   <testcase name="addMultipleEdgesToGraph" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.001"/>
   <testcase name="addEmptyEdgeTest" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.001"/>
   <testcase name="addEdgesToBuilderTest" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.003"/>
-  <testcase name="addMultipleEdgesToBuilder" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.003"/>
-  <testcase name="addEmpytEdgeToBuilderTest" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.002"/>
+  <testcase name="addMultipleEdgesToBuilder" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.002"/>
+  <testcase name="addEmpytEdgeToBuilderTest" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.008"/>
   <testcase name="addEdgeToBuilderTestNoFile" classname="edu.illinois.starts.helpers.YasglHelperTest" time="0.001"/>
   <system-out><![CDATA[...]]></system-out>
   <system-err><![CDATA[]]></system-err>

@@ -13,6 +13,7 @@ import edu.illinois.starts.util.Logger;
 import edu.illinois.starts.util.Pair;
 import edu.illinois.yasgl.DirectedGraph;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.tasks.TaskAction;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ import java.util.logging.Level;
 
 public class DiffTask extends BaseTask{
 
+    @TaskAction
     public void executeTask() throws Exception {
         Logger.getGlobal().setLoggingLevel(Level.parse(mExtention.getLoggingLevel()));
 

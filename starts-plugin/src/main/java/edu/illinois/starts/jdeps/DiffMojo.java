@@ -30,23 +30,23 @@ import org.apache.maven.surefire.booter.Classpath;
 /**
  * Finds types that have changed since the last time they were analyzed.
  */
-@Mojo(name = "diff", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(phase = LifecyclePhase.TEST_COMPILE)
+//@Mojo(name = "diff", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
+//@Execute(phase = LifecyclePhase.TEST_COMPILE)
 public class DiffMojo extends BaseMojo {
-    /**
+/*    *//**
      * Set this to "false" to disable smart hashing, i.e., to *not* strip
      * Bytecode files of debug info prior to computing checksums. See the "Smart
      * Checksums" Sections in the Ekstazi paper:
      * http://dl.acm.org/citation.cfm?id=2771784
-     */
+     *//*
     @Parameter(property = "cleanBytes", defaultValue = "true")
     protected boolean cleanBytes;
 
-    /**
+    *//**
      * Set this to "true" to update test dependencies on disk. The default value of "false"
      * is useful for "dry runs" where one may want to see the diff without updating
      * the test dependencies.
-     */
+     *//*
     @Parameter(property = "updateDiffChecksums", defaultValue = "false")
     private boolean updateDiffChecksums;
 
@@ -138,5 +138,5 @@ public class DiffMojo extends BaseMojo {
             RTSUtil.saveForNextRun(artifactsDir, graph, printGraph, graphFile);
             Writer.writeClassPath(sfPathString, artifactsDir);
         }
-    }
+    }*/
 }

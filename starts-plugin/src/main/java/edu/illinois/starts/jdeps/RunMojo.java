@@ -23,17 +23,17 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 /**
  * Prepares for test runs by writing non-affected tests in the excludesFile.
  */
-@Mojo(name = "run", requiresDependencyResolution = ResolutionScope.TEST)
+//@Mojo(name = "run", requiresDependencyResolution = ResolutionScope.TEST)
 public class RunMojo extends DiffMojo {
-    /**
+  /*  *//**
      * Set this to "false" to prevent checksums from being persisted to disk. This
      * is useful for "dry runs" where one may want to see the non-affected tests that
      * STARTS writes to the Surefire excludesFile, without updating test dependencies.
-     */
+     *//*
     @Parameter(property = "updateRunChecksums", defaultValue = "true")
     protected boolean updateRunChecksums;
 
-    /**
+    *//**
      * Set this option to "true" to run all tests, not just the affected ones. This option is useful
      * in cases where one is interested to measure the time to run all tests, while at the
      * same time measuring the times for analyzing what tests to select and reporting the number of
@@ -41,7 +41,7 @@ public class RunMojo extends DiffMojo {
      * Note: Run with "-DstartsLogging=FINER" or "-DstartsLogging=FINEST" so that the "selected-tests"
      * file, which contains the list of tests that would be run if this option is set to false, will
      * be written to disk.
-     */
+     *//*
     @Parameter(property = "retestAll", defaultValue = "false")
     protected boolean retestAll;
 
@@ -100,5 +100,5 @@ public class RunMojo extends DiffMojo {
         Pair<Set<String>, Set<String>> data = computeChangeData();
         nonAffectedTests = data == null ? new HashSet<String>() : data.getKey();
         changedClasses  = data == null ? new HashSet<String>() : data.getValue();
-    }
+    }*/
 }

@@ -17,10 +17,10 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 /**
  * Invoked after after running selected tests (see lifecycle.xml for details).
  */
-@Mojo(name = "starts", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(phase = LifecyclePhase.TEST, lifecycle = "starts")
+//@Mojo(name = "starts", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
+//@Execute(phase = LifecyclePhase.TEST, lifecycle = "starts")
 public class StartsMojo extends RunMojo {
-    private Logger logger;
+   /* private Logger logger;
 
     public void execute() throws MojoExecutionException {
         long endOfRunMojo = Long.parseLong(System.getProperty("[PROFILE] END-OF-RUN-MOJO: "));
@@ -29,5 +29,5 @@ public class StartsMojo extends RunMojo {
         long end = System.currentTimeMillis();
         logger.log(Level.FINE, "[PROFILE] TEST-RUNNING-TIME: " + Writer.millsToSeconds(end - endOfRunMojo));
         logger.log(Level.FINE, "[PROFILE] STARTS-MOJO-TOTAL: " + Writer.millsToSeconds(end - endOfRunMojo));
-    }
+    }*/
 }

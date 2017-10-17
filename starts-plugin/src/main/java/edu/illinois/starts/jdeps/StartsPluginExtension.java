@@ -83,13 +83,6 @@ public class StartsPluginExtension {
      */
     protected boolean retestAll;
 
-    public boolean isUpdateRunChecksums() {
-        return updateRunChecksums;
-    }
-
-    public boolean isRetestAll() {
-        return retestAll;
-    }
 
     public StartsPluginExtension(Project project) {
 
@@ -170,6 +163,14 @@ public class StartsPluginExtension {
 
     public void setLoggingLevel(String loggingLevel) {
         this.loggingLevel = loggingLevel;
+    }
+
+    public boolean isUpdateRunChecksums() {
+        return updateRunChecksums;
+    }
+
+    public boolean isRetestAll() {
+        return retestAll;
     }
 
     public boolean getCleanBytes() {

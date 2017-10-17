@@ -41,46 +41,46 @@ import org.apache.maven.surefire.util.DefaultScanResult;
 abstract class BaseMojo extends SurefirePlugin implements StartsConstants {
     /**
      * Set this to "false" to not filter out "sun.*" and "java.*" classes from jdeps parsing.
-     */
+     *//*
     @Parameter(property = "filterLib", defaultValue = "false")
     protected boolean filterLib;
 
-    /**
+    *//**
      * The directory in which to store STARTS artifacts that are needed between runs.
-     */
+     *//*
     protected String artifactsDir;
 
-    /**
+    *//**
      * Allows to switch the format in which we want to store the test dependencies.
      * A full list of what we currently support can be found in
      * @see edu.illinois.starts.enums.DependencyFormat
-     */
+     *//*
     @Parameter(property = "depFormat", defaultValue = "ZLC")
     protected DependencyFormat depFormat;
 
-    /**
+    *//**
      * Path to directory that contains the result of running jdeps on third-party
      * and standard library jars that an application may need, e.g., those in M2_REPO.
-     */
+     *//*
     @Parameter(property = "gCache", defaultValue = "${basedir}${file.separator}jdeps-cache")
     protected String graphCache;
 
-    /**
+    *//**
      * Set this to "false" to not print the graph obtained from jdeps parsing.
      * When "true" the graph is written to file after the run.
-     */
+     *//*
     @Parameter(property = "printGraph", defaultValue = "true")
     protected boolean printGraph;
 
-    /**
+    *//**
      * Output filename for the graph, if printGraph == true.
-     */
+     *//*
     @Parameter(defaultValue = "graph", readonly = true, required = true)
     protected String graphFile;
 
-    /**
+    *//**
      * Log levels as defined in java.util.logging.Level.
-     */
+     *//*
     @Parameter(property = "startsLogging", defaultValue = "CONFIG")
     protected String loggingLevel;
 
@@ -258,5 +258,5 @@ abstract class BaseMojo extends SurefirePlugin implements StartsConstants {
         DirectoryScanner classScanner = new DirectoryScanner(getClassesDirectory(), new TestListResolver("*"));
         DefaultScanResult scanResult = classScanner.scan().append(testScanner.scan());
         return scanResult.getFiles();
-    }
+    }*/
 }

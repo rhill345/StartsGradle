@@ -13,6 +13,7 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.testing.Test;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -83,21 +84,38 @@ abstract class BaseTask extends Test {
         return classes;
     }
 
-    public ClassLoader createClassLoader(FileCollection classPath) {
-        /*long start = System.currentTimeMillis();
-        ClassLoader loader = null;
-        try {
-            getClasspath().getFiles()
-            ClassLoader loader = new URLClassLoader(classpathURLs);
-            getClasspath().
-            loader = sfClassPath.createClassLoader(null, false, false, "MyRole");
-        } catch (SurefireExecutionException see) {
-            see.printStackTrace();
+    private List getProjectClasses(String methodName) {
+        long start = System.currentTimeMillis();
+
+        List<String> classes = new ArrayList<>();
+        Set<File> projectFiles = getClasspath().getFiles();
+        for (File f : projectFiles) {
+            classes.add(f.getName());
         }
+
+        long end = System.currentTimeMillis();
+        Logger.getGlobal().log(Level.FINE, "[PROFILE] " + methodName + "(getProjectClasses): "
+                + Writer.millsToSeconds(end - start));
+        return classes;
+    }
+
+    public ClassLoader createClassLoader(FileCollection classPath) {
+        long start = System.currentTimeMillis();
+        GradleClassLoader classLoader = null;
+        try {
+            classLoader = new GradleClassLoader(null, "MyRole");
+            for (File f : classPath){
+                classLoader.addURL(f);
+            }
+            classLoader.setDefaultAssertionStatus(false);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         long end = System.currentTimeMillis();
         Logger.getGlobal().log(Level.FINE, "[PROFILE] updateForNextRun(createClassLoader): "
-                + Writer.millsToSeconds(end - start));*/
-        return null;
+                + Writer.millsToSeconds(end - start));
+        return classLoader;
     }
 
     protected class Result {
@@ -130,23 +148,6 @@ abstract class BaseTask extends Test {
             return unreachedDeps;
         }
     }
-
-    /*public Classpath getSureFireClassPath() throws MojoExecutionException {
-        long start = System.currentTimeMillis();
-        getClasspath().
-        if (sureFireClassPath == null) {
-            try {
-                sureFireClassPath = new Classpath(getProject().getTestClasspathElements());
-            } catch (Exception drre) {
-                drre.printStackTrace();
-            }
-        }
-        Logger.getGlobal().log(Level.FINEST, "SF-CLASSPATH: " + sureFireClassPath.getClassPath());
-        long end = System.currentTimeMillis();
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] updateForNextRun(getSureFireClassPath): "
-                + Writer.millsToSeconds(end - start));
-        return sureFireClassPath;
-    }*/
 
     public FileCollection getClassPath() {
         long start = System.currentTimeMillis();
@@ -215,10 +216,9 @@ abstract class BaseTask extends Test {
     }
 
     protected List<String> getAllClasses() {
-       /* DirectoryScanner testScanner = new DirectoryScanner(getTestClassesDirectory(), new TestListResolver("*"));
-        DirectoryScanner classScanner = new DirectoryScanner(getClassesDirectory(), new TestListResolver("*"));
-        DefaultScanResult scanResult = classScanner.scan().append(testScanner.scan());
-        return getProject().g;*/
-       return null;
+        List<String> allClasses = new ArrayList<>();
+        allClasses.addAll(getTestClasses("getAllClasses()"));
+        allClasses.addAll(getProjectClasses("getAllClasses()"));
+       return allClasses;
     }
 }

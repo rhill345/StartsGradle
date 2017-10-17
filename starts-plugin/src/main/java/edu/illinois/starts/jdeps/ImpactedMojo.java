@@ -26,20 +26,20 @@ import org.apache.maven.surefire.booter.Classpath;
 /**
  * Find all types that are impacted by a change.
  */
-@Mojo(name = "impacted", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
-@Execute(phase = LifecyclePhase.TEST_COMPILE)
+//@Mojo(name = "impacted", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
+//@Execute(phase = LifecyclePhase.TEST_COMPILE)
 public class ImpactedMojo extends DiffMojo {
-    /**
+  /*  *//**
      * Set this to "true" to update test dependencies on disk. The default value of "false"
      * is useful for "dry runs" where one may want to see the diff without updating
      * the test dependencies.
-     */
+     *//*
     @Parameter(property = "updateImpactedChecksums", defaultValue = "false")
     private boolean updateImpactedChecksums;
 
-    /**
+    *//**
      * Set to "true" to print newly-added classes: classes in the program that were not in the previous version.
-     */
+     *//*
     @Parameter(property = "trackNewClasses", defaultValue = "false")
     private boolean trackNewClasses;
     private Logger logger;
@@ -101,5 +101,5 @@ public class ImpactedMojo extends DiffMojo {
 
     private void save(String artifactsDir, DirectedGraph<String> graph) {
         RTSUtil.saveForNextRun(artifactsDir, graph, printGraph, graphFile);
-    }
+    }*/
 }
