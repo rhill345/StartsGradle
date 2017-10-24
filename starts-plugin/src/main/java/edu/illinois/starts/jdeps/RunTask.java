@@ -8,9 +8,12 @@ import edu.illinois.starts.helpers.Writer;
 import edu.illinois.starts.maven.AgentLoader;
 import edu.illinois.starts.util.Logger;
 import edu.illinois.starts.util.Pair;
+import org.gradle.api.GradleException;
+import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.TaskAction;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
 import static edu.illinois.starts.constants.StartsConstants.STARTS_EXCLUDE_PROPERTY;
@@ -38,12 +41,12 @@ public class RunTask extends DiffTask {
         run(excludePaths);
         Set<String> allTests = new HashSet<>(getTestClasses("checkIfAllAffected"));
         if (allTests.equals(nonAffectedTests)) {
-            logger.log(Level.INFO, "********** Run **********");
-            logger.log(Level.INFO, "No tests are selected to run.");
+            getLogger().log(LogLevel.LIFECYCLE,  "********** Run **********");
+            getLogger().log(LogLevel.LIFECYCLE,  "No tests are selected to run.");
         }
         long end = System.currentTimeMillis();
         System.setProperty("[PROFILE] END-OF-RUN-MOJO: ", Long.toString(end));
-        logger.log(Level.FINE, "[PROFILE] RUN-MOJO-TOTAL: " + Writer.millsToSeconds(end - start));
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] RUN-MOJO-TOTAL: " + Writer.millsToSeconds(end - start));
     }
 
     protected void run(List<String> excludePaths) throws Exception {
@@ -57,16 +60,16 @@ public class RunTask extends DiffTask {
             updateForNextRun(nonAffectedTests);
         }
         long endUpdateTime = System.currentTimeMillis();
-        logger.log(Level.FINE, "[PROFILE] STARTS-MOJO-UPDATE-TIME: "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] STARTS-MOJO-UPDATE-TIME: "
                 + Writer.millsToSeconds(endUpdateTime - startUpdateTime));
     }
 
     private void dynamicallyUpdateExcludes(List<String> excludePaths) {
         if (AgentLoader.loadDynamicAgent()) {
-            logger.log(Level.FINEST, "AGENT LOADED!!!");
+            getLogger().log(LogLevel.LIFECYCLE, "AGENT LOADED!!!");
             System.setProperty(STARTS_EXCLUDE_PROPERTY, Arrays.toString(excludePaths.toArray(new String[0])));
         } else {
-            //throw new MojoExecutionException("I COULD NOT ATTACH THE AGENT");
+            throw new GradleException("I COULD NOT ATTACH THE AGENT");
         }
     }
 

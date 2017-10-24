@@ -9,6 +9,7 @@ import edu.illinois.starts.helpers.*;
 import edu.illinois.starts.util.Logger;
 import edu.illinois.yasgl.DirectedGraph;
 
+import org.gradle.api.GradleException;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.testing.Test;
 
@@ -43,13 +44,13 @@ abstract class BaseTask extends Test {
         Writer.writeToLog(set, title, Logger.getGlobal());
     }
 
-    public String getArtifactsDir() throws Exception {
+    public String getArtifactsDir() throws GradleException {
         if (artifactsDir == null) {
             // TODO: make sure diretory is the projectbeing tested
             artifactsDir = getWorkingDir().getAbsolutePath() + File.separator + STARTS_DIRECTORY_PATH;
             File file = new File(artifactsDir);
             if (!file.mkdirs() && !file.exists()) {
-                throw new Exception("I could not create artifacts dir: " + artifactsDir);
+                throw new GradleException("I could not create artifacts dir: " + artifactsDir);
             }
         }
         return artifactsDir;

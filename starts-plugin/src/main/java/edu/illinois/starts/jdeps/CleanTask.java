@@ -9,6 +9,7 @@ import edu.illinois.starts.helpers.Writer;
 import edu.illinois.starts.util.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
@@ -21,9 +22,11 @@ public class CleanTask extends BaseTask {
 
     @TaskAction
     public void executeTask() throws Exception {
-        Logger.getGlobal().log(Level.ALL, "[CLEAN] RUNNING CLEAN COMMAND ");
+        getLogger().log(LogLevel.LIFECYCLE, "[CLEAN] RUNNING CLEAN COMMAND");
         File directory = new File(getArtifactsDir());
+        getLogger().log(LogLevel.LIFECYCLE, "[CLEAN] CHECKING DIRECTORY " + directory.getPath() );
         if (directory.exists()) {
+            getLogger().log(LogLevel.LIFECYCLE, "[CLEAN] DELETING DIRECTORY " );
             FileUtil.delete(directory);
         }
     }

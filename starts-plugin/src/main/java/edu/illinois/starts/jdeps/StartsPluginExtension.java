@@ -84,6 +84,18 @@ public class StartsPluginExtension {
     protected boolean retestAll;
 
 
+    /**
+     * Set this to "true" to update test dependencies on disk. The default value of "false"
+     * is useful for "dry runs" where one may want to see the diff without updating
+     * the test dependencies.
+     */
+    private boolean updateImpactedChecksums = false;
+
+    /**
+     * Set to "true" to print newly-added classes: classes in the program that were not in the previous version.
+     */
+    private boolean trackNewClasses = false;
+
     public StartsPluginExtension(Project project) {
 
         Map<String, ?> properties = project.getProperties();
@@ -122,6 +134,15 @@ public class StartsPluginExtension {
         if(properties.containsKey("retestAll")){
             retestAll = (Boolean) properties.get("retestAll");
         }
+
+        if(properties.containsKey("trackNewClasses")){
+            trackNewClasses = (Boolean) properties.get("trackNewClasses");
+        }
+
+        if(properties.containsKey("updateImpactedChecksums")){
+            updateImpactedChecksums = (Boolean) properties.get("updateImpactedChecksums");
+        }
+
 
     }
 
@@ -179,5 +200,13 @@ public class StartsPluginExtension {
 
     public boolean getUpdateDiffChecksums() {
         return updateDiffChecksums;
+    }
+
+    public boolean isUpdateImpactedChecksums() {
+        return updateImpactedChecksums;
+    }
+
+    public boolean isTrackNewClasses() {
+        return trackNewClasses;
     }
 }

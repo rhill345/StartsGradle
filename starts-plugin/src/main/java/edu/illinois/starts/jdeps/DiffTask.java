@@ -12,6 +12,7 @@ import edu.illinois.starts.helpers.ZLCHelper;
 import edu.illinois.starts.util.Logger;
 import edu.illinois.starts.util.Pair;
 import edu.illinois.yasgl.DirectedGraph;
+import org.gradle.api.GradleException;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.TaskAction;
 
@@ -44,7 +45,7 @@ public class DiffTask extends BaseTask{
         }
     }
 
-    protected Pair<Set<String>, Set<String>> computeChangeData() throws Exception {
+    protected Pair<Set<String>, Set<String>> computeChangeData() throws GradleException {
         long start = System.currentTimeMillis();
         Pair<Set<String>, Set<String>> data = null;
         if (mExtention.getDepFormat() == DependencyFormat.ZLC) {
