@@ -31,7 +31,7 @@ public class GradleClassLoader  extends URLClassLoader {
     }
 
     public void addURL(File file) throws MalformedURLException {
-        addURL(new URL(file.getAbsolutePath()));
+        addURL(file.toURI().toURL());
     }
 
     public synchronized Class loadClass(String name) throws ClassNotFoundException {

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: org.ekstazi:org.ekstazi.core:4.6.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/ekstazi/org.ekstazi.core/4.6.2/org.ekstazi.core-4.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

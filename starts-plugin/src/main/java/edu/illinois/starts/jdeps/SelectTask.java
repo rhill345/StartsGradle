@@ -12,31 +12,15 @@ import org.gradle.api.tasks.TaskAction;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Finds tests affected by a change but does not run them.
- */
-//@Mojo(name = "select", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
-//@Execute(phase = LifecyclePhase.TEST_COMPILE)
 public class SelectTask extends DiffTask {
-    /**
-     * Set this to "true" to update test dependencies on disk. The default value of
-     * "false" is useful for "dry runs" where one may want to see the affected
-     * tests, without updating test dependencies.
-     */
-   /* @Parameter(property = "updateSelectChecksums", defaultValue = "false")
-    private boolean updateSelectChecksums;
-
-    private Logger logger;*/
 
     @TaskAction
     public void executeTask() throws Exception {
-        //Logger.getGlobal().setLoggingLevel(Level.parse(loggingLevel));
-        //logger = Logger.getGlobal();
         long start = System.currentTimeMillis();
         Set<String> affectedTests = computeAffectedTests();
         printResult(affectedTests, "AffectedTests");
         long end = System.currentTimeMillis();
-        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] RUN-MOJO-TOTAL: " + Writer.millsToSeconds(end - start));
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] RUN-TASK-TOTAL: " + Writer.millsToSeconds(end - start));
         getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] TEST-RUNNING-TIME: " + 0.0);
     }
 
@@ -58,5 +42,11 @@ public class SelectTask extends DiffTask {
         long endUpdate = System.currentTimeMillis();
         getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] STARTS-MOJO-UPDATE-TIME: " + Writer.millsToSeconds(endUpdate - startUpdate));
         return affectedTests;
+    }
+
+    private void printSet(String name, Set<String> set) {
+        for (String s : set) {
+            getLogger().log(LogLevel.LIFECYCLE, "[" + name + "] " + s);
+        }
     }
 }

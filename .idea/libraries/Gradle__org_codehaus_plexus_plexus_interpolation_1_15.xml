@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: org.codehaus.plexus:plexus-interpolation:1.15">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-interpolation/1.15/plexus-interpolation-1.15.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

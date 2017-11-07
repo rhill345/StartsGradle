@@ -11,6 +11,7 @@ import edu.illinois.yasgl.DirectedGraph;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.testing.Test;
 
 import java.io.File;
@@ -45,14 +46,15 @@ abstract class BaseTask extends Test {
     }
 
     public String getArtifactsDir() throws GradleException {
+        getLogger().log(LogLevel.LIFECYCLE, "[BASE DIR]"  + System.getProperty("basedir"));
         if (artifactsDir == null) {
-            // TODO: make sure diretory is the projectbeing tested
             artifactsDir = getWorkingDir().getAbsolutePath() + File.separator + STARTS_DIRECTORY_PATH;
             File file = new File(artifactsDir);
             if (!file.mkdirs() && !file.exists()) {
                 throw new GradleException("I could not create artifacts dir: " + artifactsDir);
             }
         }
+        getLogger().log(LogLevel.LIFECYCLE, "[artifactsDir]"  + artifactsDir);
         return artifactsDir;
     }
 
@@ -72,11 +74,13 @@ abstract class BaseTask extends Test {
 
     public List getTestClasses(String methodName) {
         long start = System.currentTimeMillis();
-
        List<String> classes = new ArrayList<>();
-       Set<File> testFiles = getTestClassesDirs().getFiles();
-       for (File f : testFiles) {
-           classes.add(f.getName());
+       Set<File> testDirs = getTestClassesDirs().getFiles();
+       for (File dir : testDirs) {
+           File[] files = dir.listFiles();
+           for (File classFile : files) {
+               classes.add(classFile.getName());
+           }
        }
 
         long end = System.currentTimeMillis();
@@ -105,6 +109,7 @@ abstract class BaseTask extends Test {
         GradleClassLoader classLoader = null;
         try {
             classLoader = new GradleClassLoader(null, "MyRole");
+
             for (File f : classPath){
                 classLoader.addURL(f);
             }
@@ -112,9 +117,8 @@ abstract class BaseTask extends Test {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
         long end = System.currentTimeMillis();
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] updateForNextRun(createClassLoader): "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] updateForNextRun(createClassLoader): "
                 + Writer.millsToSeconds(end - start));
         return classLoader;
     }
@@ -172,6 +176,8 @@ abstract class BaseTask extends Test {
 
         String m2Repo = getProject().getRepositories().mavenLocal().getUrl().getPath();
         File jdepsCache = new File(mExtention.getGraphCache());
+
+        getLogger().log(LogLevel.LIFECYCLE, "done getting jdepsCache");
         // We store the jdk-graphs at the root of "jdepsCache" directory, with
         // jdk.graph being the file that merges all the graphs for all standard
         // library jars.
@@ -180,17 +186,21 @@ abstract class BaseTask extends Test {
         Loadables loadables = new Loadables(classesToAnalyze, artifactsDir, sfPathString, mExtention.getFilterLib(), jdepsCache);
         // Surefire Classpath object is easier to iterate over without de-constructing
         // sfPathString (which we use in a number of other places)
-        loadables.setClasspath(new ArrayList(classPath.getFiles()));
 
+        loadables.setClasspath(new ArrayList(getFileCollectionStrings(classPath)));
+
+        getLogger().log(LogLevel.LIFECYCLE, "done setClasspath");
         List<String> moreEdges = new ArrayList<String>();
         long loadMoreEdges = System.currentTimeMillis();
         Cache cache = new Cache(jdepsCache, m2Repo);
+        getLogger().log(LogLevel.LIFECYCLE, "done Cache");
         // 1. Load non-reflection edges from third-party libraries in the classpath
         cache.loadM2EdgesFromCache(moreEdges, sfPathString);
+        getLogger().log(LogLevel.LIFECYCLE, "done loadM2EdgesFromCache");
         long loadM2EdgesFromCache = System.currentTimeMillis();
         // 2. Get non-reflection edges from CUT and SDK; use (1) to build graph
-        loadables.create(new ArrayList<>(moreEdges), new ArrayList(classPath.getFiles()), computeUnreached);
-
+        loadables.create(new ArrayList<>(moreEdges), new ArrayList(getFileCollectionStrings(classPath)), computeUnreached);
+        getLogger().log(LogLevel.LIFECYCLE, "done loadables.create");
         Map<String, Set<String>> transitiveClosure = loadables.getTransitiveClosure();
         long createLoadables = System.currentTimeMillis();
 
@@ -203,17 +213,25 @@ abstract class BaseTask extends Test {
                 : RTSUtil.computeAffectedTests(new HashSet<>(classesToAnalyze),
                 nonAffected, transitiveClosure);
         long end = System.currentTimeMillis();
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] prepareForNextRun(loadMoreEdges): "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] prepareForNextRun(loadMoreEdges): "
                 + Writer.millsToSeconds(loadMoreEdges - start));
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] prepareForNextRun(loadM2EdgesFromCache): "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] prepareForNextRun(loadM2EdgesFromCache): "
                 + Writer.millsToSeconds(loadM2EdgesFromCache - loadMoreEdges));
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] prepareForNextRun(createLoadable): "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] prepareForNextRun(createLoadable): "
                 + Writer.millsToSeconds(createLoadables - loadM2EdgesFromCache));
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] prepareForNextRun(computeAffectedTests): "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] prepareForNextRun(computeAffectedTests): "
                 + Writer.millsToSeconds(end - createLoadables));
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] updateForNextRun(prepareForNextRun(TOTAL)): "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] updateForNextRun(prepareForNextRun(TOTAL)): "
                 + Writer.millsToSeconds(end - start));
         return new Result(transitiveClosure, loadables.getGraph(), affected, loadables.getUnreached());
+    }
+
+    List<String> getFileCollectionStrings(FileCollection collection) {
+        List<String> paths = new ArrayList<>();
+        for (File f : collection.getFiles()) {
+            paths.add(f.getAbsolutePath());
+        }
+        return paths;
     }
 
     protected List<String> getAllClasses() {

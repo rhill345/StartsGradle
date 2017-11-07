@@ -14,6 +14,7 @@ import edu.illinois.starts.util.Pair;
 import edu.illinois.yasgl.DirectedGraph;
 import org.gradle.api.GradleException;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.TaskAction;
 
 import java.util.*;
@@ -48,25 +49,32 @@ public class DiffTask extends BaseTask{
     protected Pair<Set<String>, Set<String>> computeChangeData() throws GradleException {
         long start = System.currentTimeMillis();
         Pair<Set<String>, Set<String>> data = null;
+        getLogger().log(LogLevel.LIFECYCLE,"[computeChangeData] COMPUTING CHANGES: ");
+
         if (mExtention.getDepFormat() == DependencyFormat.ZLC) {
+            getLogger().log(LogLevel.LIFECYCLE,"[DependencyFormat.ZLC]");
             ZLCHelper zlcHelper = new ZLCHelper();
             data = zlcHelper.getChangedData(getArtifactsDir(), mExtention.getCleanBytes());
         } else if (mExtention.getDepFormat()  == DependencyFormat.CLZ) {
+            getLogger().log(LogLevel.LIFECYCLE,"[computeChangeData] COMPUTING CHANGES: ");
             data = EkstaziHelper.getNonAffectedTests(getArtifactsDir());
         }
+        getLogger().log(LogLevel.LIFECYCLE,"[DONE] getDepFormat: ");
         Set<String> changed = data == null ? new HashSet<String>() : data.getValue();
         if (Logger.getGlobal().getLoggingLevel().intValue() <= Level.FINEST.intValue()) {
             Writer.writeToFile(changed, "changed-classes", getArtifactsDir());
         }
         long end = System.currentTimeMillis();
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] COMPUTING CHANGES: " + Writer.millsToSeconds(end - start));
+        getLogger().log(LogLevel.LIFECYCLE,"[PROFILE] COMPUTING CHANGES: " + Writer.millsToSeconds(end - start));
         return data;
     }
 
     protected void updateForNextRun(Set<String> nonAffected) throws Exception {
         long start = System.currentTimeMillis();
         FileCollection classPath = getClassPath();
+
         String sfPathString = classPath.getAsPath();;//Writer.pathToString(new ArrayList(classPath.getFiles()));
+        getLogger().log(LogLevel.LIFECYCLE, "[sfPathString] " + sfPathString);
         setIncludesExcludes();
         List<String> allTests = getTestClasses("updateForNextRun");
         Set<String> affectedTests = new HashSet<>(allTests);
@@ -74,14 +82,18 @@ public class DiffTask extends BaseTask{
         DirectedGraph<String> graph = null;
         if (!affectedTests.isEmpty()) {
             ClassLoader loader = createClassLoader(classPath);
+            getLogger().log(LogLevel.LIFECYCLE, "Done getting ClassLoader");
             //TODO: set this boolean to true only for static reflectionAnalyses with * (border, string, naive)?
             boolean computeUnreached = true;
             Result result = prepareForNextRun(sfPathString, classPath, allTests, nonAffected, computeUnreached);
+            getLogger().log(LogLevel.LIFECYCLE, "Done getting prepareForNextRun");
             Map<String, Set<String>> testDeps = result.getTestDeps();
             graph = result.getGraph();
             Set<String> unreached = computeUnreached ? result.getUnreachedDeps() : new HashSet<String>();
             if (mExtention.getDepFormat()  == DependencyFormat.ZLC) {
                 ZLCHelper zlcHelper = new ZLCHelper();
+                getLogger().log(LogLevel.LIFECYCLE, "testDeps: " + testDeps);
+                getLogger().log(LogLevel.LIFECYCLE, "unreached: " + unreached.size());
                 zlcHelper.updateZLCFile(testDeps, loader, getArtifactsDir(), unreached);
             } else if (mExtention.getDepFormat()  == DependencyFormat.CLZ) {
                 // The next line is not needed with ZLC because '*' is explicitly tracked in ZLC
@@ -92,15 +104,17 @@ public class DiffTask extends BaseTask{
                 RTSUtil.computeAndSaveNewCheckSums(getArtifactsDir(), affectedTests, testDeps, loader);
             }
         }
+        getLogger().log(LogLevel.LIFECYCLE, "start save");
         save(getArtifactsDir(), affectedTests, allTests, sfPathString, graph);
+        getLogger().log(LogLevel.LIFECYCLE, "Done save");
         printToTerminal(allTests, affectedTests);
         long end = System.currentTimeMillis();
-        Logger.getGlobal().log(Level.FINE, "[PROFILE] updateForNextRun(total): " + Writer.millsToSeconds(end - start));
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] updateForNextRun(total): " + Writer.millsToSeconds(end - start));
     }
 
     public void printToTerminal(List<String> testClasses, Set<String> affectedTests) {
-        Logger.getGlobal().log(Level.INFO, "STARTS:AffectedTests: " + affectedTests.size());
-        Logger.getGlobal().log(Level.INFO, "STARTS:TotalTests: " + testClasses.size());
+        getLogger().log(LogLevel.LIFECYCLE, "STARTS:AffectedTests: " + affectedTests.size());
+        getLogger().log(LogLevel.LIFECYCLE, "STARTS:TotalTests: " + testClasses.size());
     }
 
     public void save(String artifactsDir, Set<String> affectedTests, List<String> testClasses,

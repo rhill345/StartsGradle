@@ -24,7 +24,7 @@ public class StartsPluginExtension {
      * Allows to switch the format in which we want to store the test dependencies.
      * A full list of what we currently support can be found in
      * @see edu.illinois.starts.enums.DependencyFormat */
-    protected DependencyFormat depFormat;
+    protected DependencyFormat depFormat = DependencyFormat.ZLC;
 
 
     /**
@@ -63,7 +63,7 @@ public class StartsPluginExtension {
      * is useful for "dry runs" where one may want to see the diff without updating
      * the test dependencies.
      */
-    private boolean updateDiffChecksums;
+    private boolean updateDiffChecksums = true;
 
     /**
      * Set this to "false" to prevent checksums from being persisted to disk. This
