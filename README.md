@@ -9,7 +9,7 @@ for Gradle-based Java and Android programs.
 1. Java 1.8 and above
 2. Operating System: Linux or OSX
 
-## Integrating STARTS Plugin from Maven Central
+## Integrating STARTS Plugin
 
 Change the gradle.settings to add the configuration for the STARTS plugin:
 
@@ -28,7 +28,7 @@ Change the gradle.settings to add the configuration for the STARTS plugin:
 
 ## Building STARTS from source
 
-1. `git clone https://github.com/TestingResearchIllinois/starts`
+1. `git clone https://github.com/rhill345/StartsGradle`
 2. `cd starts`
 3. `gradle install`
 
@@ -61,7 +61,8 @@ checksums of files in the latest version, while the command in (4)
 `update**Checksums` option that can be used to change the default
 behavior. For example, to update the checksums while checking the
 diff, add the following to gradle.build and re-run
-```json
+
+```
 
 apply plugin: 'edu.illinois.starts'
 
