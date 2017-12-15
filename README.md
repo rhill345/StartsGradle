@@ -13,7 +13,7 @@ for Gradle-based Java and Android programs.
 
 Change the gradle.settings to add the configuration for the STARTS plugin:
 
-```json
+```
 {
     buildscript {
       repositories {
