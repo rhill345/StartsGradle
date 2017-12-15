@@ -5,18 +5,14 @@
 package edu.illinois.starts.jdeps;
 
 import edu.illinois.starts.helpers.Writer;
-import edu.illinois.starts.maven.AgentLoader;
 import edu.illinois.starts.util.Logger;
 import edu.illinois.starts.util.Pair;
-import org.gradle.api.GradleException;
+import org.gradle.api.Task;
 import org.gradle.api.logging.LogLevel;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.testing.Test;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
-
-import static edu.illinois.starts.constants.StartsConstants.STARTS_EXCLUDE_PROPERTY;
 
 /**
  * Prepares for test runs by writing non-affected tests in the excludesFile.
@@ -25,11 +21,12 @@ public class RunTask extends DiffTask {
 
     protected Set<String> nonAffectedTests;
     protected Set<String> changedClasses;
+    protected long runEndTime;
     private Logger logger;
 
-    @TaskAction
-    public void executeTask() throws Exception {
-        Logger.getGlobal().setLoggingLevel(Level.parse(mExtention.getLoggingLevel()));
+    @Override
+    public void performTask() throws Exception {
+        Logger.getGlobal().setLoggingLevel(Level.parse(getExtension().getLoggingLevel()));
         logger = Logger.getGlobal();
         long start = System.currentTimeMillis();
         setChangedAndNonaffected();
@@ -38,38 +35,37 @@ public class RunTask extends DiffTask {
         if (logger.getLoggingLevel().intValue() <= Level.FINEST.intValue()) {
             Writer.writeToFile(nonAffectedTests, "non-affected-tests", getArtifactsDir());
         }
-        run(excludePaths);
         Set<String> allTests = new HashSet<>(getTestClasses("checkIfAllAffected"));
+        run(excludePaths);
         if (allTests.equals(nonAffectedTests)) {
             getLogger().log(LogLevel.LIFECYCLE,  "********** Run **********");
             getLogger().log(LogLevel.LIFECYCLE,  "No tests are selected to run.");
         }
-        long end = System.currentTimeMillis();
-        System.setProperty("[PROFILE] END-OF-RUN-MOJO: ", Long.toString(end));
-        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] RUN-MOJO-TOTAL: " + Writer.millsToSeconds(end - start));
+        long runEndTime = System.currentTimeMillis();
+        System.setProperty("[PROFILE] END-OF-RUN-TASK: ", Long.toString(runEndTime));
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] RUN-TASK-TOTAL: " + Writer.millsToSeconds(runEndTime - start));
     }
 
     protected void run(List<String> excludePaths) throws Exception {
-        if (mExtention.isRetestAll()) {
+        if (getExtension().getRetestAll()) {
             dynamicallyUpdateExcludes(new ArrayList<String>());
         } else {
             dynamicallyUpdateExcludes(excludePaths);
         }
         long startUpdateTime = System.currentTimeMillis();
-        if (mExtention.isUpdateRunChecksums()) {
+        if (getExtension().getUpdateRunChecksums()) {
             updateForNextRun(nonAffectedTests);
         }
         long endUpdateTime = System.currentTimeMillis();
-        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] STARTS-MOJO-UPDATE-TIME: "
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] STARTS-TASK-UPDATE-TIME: "
                 + Writer.millsToSeconds(endUpdateTime - startUpdateTime));
     }
 
     private void dynamicallyUpdateExcludes(List<String> excludePaths) {
-        if (AgentLoader.loadDynamicAgent()) {
-            getLogger().log(LogLevel.LIFECYCLE, "AGENT LOADED!!!");
-            System.setProperty(STARTS_EXCLUDE_PROPERTY, Arrays.toString(excludePaths.toArray(new String[0])));
-        } else {
-            throw new GradleException("I COULD NOT ATTACH THE AGENT");
+        for (Task task : getProject().getTasks().withType(Test.class)) {
+            List<String> toExclude = new ArrayList<>(excludePaths);
+            toExclude.addAll(((Test)task).getExcludes());
+            ((Test)task).setExcludes(toExclude);
         }
     }
 

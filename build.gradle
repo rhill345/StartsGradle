@@ -2,14 +2,19 @@ allprojects  {
   apply plugin: 'maven'
   apply plugin: 'groovy'
 
+  // The Java Gradle Plugin development plugin is used to assist in the development of Gradle plugins.
+  // It automatically applies the Java plugin, adds the gradleApi() dependency to the compile configuration
+  // and performs validation of plugin metadata during jar task execution.
+  apply plugin: 'java-gradle-plugin'
+
   group = 'edu.illinois'
   version = '1.4-SNAPSHOT'
 }
 
 subprojects {
   apply plugin: 'java'
-  sourceCompatibility = 1.7
-  targetCompatibility = 1.7
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
   tasks.withType(JavaCompile) {
   	options.encoding = 'UTF-8'
   }
@@ -25,9 +30,7 @@ subprojects {
       maven { url "http://repo.maven.apache.org/maven2" }
     }
 
-
     dependencies {
-        compile gradleApi()
       compile group: 'org.apache.maven.plugins', name: 'maven-surefire-plugin', version:'2.19.1'
       compile group: 'org.apache.maven.plugin-testing', name: 'maven-plugin-testing-tools', version:'1.3'
       compile group: 'org.jgrapht', name: 'jgrapht-ext', version:'0.9.2'

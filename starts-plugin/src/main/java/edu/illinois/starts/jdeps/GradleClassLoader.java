@@ -27,7 +27,6 @@ public class GradleClassLoader  extends URLClassLoader {
             super.addURL(url);
             this.urls.add(url);
         }
-
     }
 
     public void addURL(File file) throws MalformedURLException {
@@ -49,14 +48,12 @@ public class GradleClassLoader  extends URLClassLoader {
                     }
                 }
             }
-
             if(c == null) {
                 throw ex;
             }
         } else {
             c = super.loadClass(name);
         }
-
         return c;
     }
 

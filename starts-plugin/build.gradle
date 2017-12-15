@@ -1,5 +1,5 @@
 
-description = 'STARTS Maven Plugin'
+description = 'STARTS Gradle Plugin'
 dependencies {
   compile project(':starts-core')
 }

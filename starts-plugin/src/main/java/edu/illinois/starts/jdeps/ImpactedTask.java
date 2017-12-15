@@ -11,8 +11,10 @@ import edu.illinois.starts.util.Logger;
 import edu.illinois.starts.util.Pair;
 import edu.illinois.yasgl.DirectedGraph;
 import org.gradle.api.GradleException;
-import org.gradle.api.file.FileCollection;
+import org.gradle.api.logging.LogLevel;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,20 +23,19 @@ import java.util.logging.Level;
 /**
  * Find all types that are impacted by a change.
  */
-//@Mojo(name = "impacted", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
-//@Execute(phase = LifecyclePhase.TEST_COMPILE)
 public class ImpactedTask extends DiffTask {
 
     private Logger logger;
 
-    public void executeTask() throws Exception {
-        Logger.getGlobal().setLoggingLevel(Level.parse(mExtention.getLoggingLevel()));
+    @Override
+    protected void performTask() throws Exception {
+        Logger.getGlobal().setLoggingLevel(Level.parse(getExtension().getLoggingLevel()));
         logger = Logger.getGlobal();
         Pair<Set<String>, Set<String>> data = computeChangeData();
         // 0. Find all classes in program
         List<String> allClasses = getAllClasses();
         if (allClasses.isEmpty()) {
-            logger.log(Level.INFO, "There are no .class files in this module.");
+            getLogger().log(LogLevel.LIFECYCLE, "There are no .class files in this module.");
             return;
         }
         Set<String>  impacted = new HashSet<>(allClasses);
@@ -45,10 +46,8 @@ public class ImpactedTask extends DiffTask {
         // 1b. Remove nonAffected from all classes to get classes impacted by the change
         impacted.removeAll(nonAffected);
 
-        logger.log(Level.FINEST, "CHANGED: " + changed.toString());
-        logger.log(Level.FINEST, "IMPACTED: " + impacted.toString());
         // 2. Optionally find newly-added classes
-        if (mExtention.isTrackNewClasses()) {
+        if (getExtension().getTrackNewClasses()) {
             Set<String> newClasses = new HashSet<>(allClasses);
             Set<String> oldClasses = ZLCHelper.getExistingClasses(getArtifactsDir());
             newClasses.removeAll(oldClasses);
@@ -56,7 +55,7 @@ public class ImpactedTask extends DiffTask {
             Writer.writeToFile(newClasses, "new-classes", getArtifactsDir());
         }
         // 3. Optionally update ZLC file for next run, using all classes in the SUT
-        if (mExtention.isUpdateImpactedChecksums()) {
+        if (getExtension().getUpdateImpactedChecksums()) {
             updateForNextRun(allClasses);
         }
         // 4. Print impacted and/or write to file
@@ -66,9 +65,8 @@ public class ImpactedTask extends DiffTask {
 
     private void updateForNextRun(List<String> allClasses) throws GradleException {
         long start = System.currentTimeMillis();
-        //Classpath sfClassPath = getSureFireClassPath();
-        FileCollection classpathFS = getClasspath();
-        String sfPathString = classpathFS.getAsPath();// Writer.pathToString(classpathFS.getAsPath());
+        Set<File> classpathFS = getClassPath();
+        String sfPathString = fileListToPathString(new ArrayList<>(classpathFS));//classpathFS.getAsPath();
         ClassLoader loader = createClassLoader(classpathFS);
         Result result = prepareForNextRun(sfPathString, classpathFS, allClasses, new HashSet<String>(), false);
         ZLCHelper zlcHelper = new ZLCHelper();
@@ -85,6 +83,6 @@ public class ImpactedTask extends DiffTask {
 
     private void save(String artifactsDir, DirectedGraph<String> graph) {
         RTSUtil.saveForNextRun(artifactsDir, graph,
-                mExtention.getPrintGraph(), mExtention.getGraphFile());
+                getExtension().getPrintGraph(), getExtension().getGraphFile());
     }
 }

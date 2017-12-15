@@ -4,3 +4,12 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile group: 'org.ekstazi', name: 'org.ekstazi.core', version:'4.6.2'
 }
+
+jar {
+    manifest {
+        attributes 'Premain-Class': "edu.illinois.starts.maven.JavaAgent"
+        attributes 'Agent-Class': "edu.illinois.starts.maven.JavaAgent"
+        attributes 'Can-Retransform-Classes': true
+        attributes 'Can-Redefine-Classes': true
+    }
+}

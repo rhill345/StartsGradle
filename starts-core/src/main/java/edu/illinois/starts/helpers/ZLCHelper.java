@@ -95,7 +95,6 @@ public class ZLCHelper {
         for (String test : testDeps.keySet()) {
             deps.addAll(testDeps.get(test));
         }
-
         // for each dep, find it's url, checksum and tests that depend on it
         for (String dep : deps) {
             String klas = ChecksumUtil.toClassName(dep);

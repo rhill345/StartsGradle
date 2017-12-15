@@ -7,15 +7,14 @@ package edu.illinois.starts.jdeps;
 import edu.illinois.starts.helpers.Writer;
 import edu.illinois.starts.util.Pair;
 import org.gradle.api.logging.LogLevel;
-import org.gradle.api.tasks.TaskAction;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class SelectTask extends DiffTask {
 
-    @TaskAction
-    public void executeTask() throws Exception {
+    @Override
+    public void performTask() throws Exception {
         long start = System.currentTimeMillis();
         Set<String> affectedTests = computeAffectedTests();
         printResult(affectedTests, "AffectedTests");
@@ -36,17 +35,11 @@ public class SelectTask extends DiffTask {
             getLogger().log(LogLevel.LIFECYCLE, "No tests are selected to run.");
         }
         long startUpdate = System.currentTimeMillis();
-        if (mExtention.isUpdateRunChecksums()) {
+        if (getExtension().getUpdateRunChecksums()) {
             updateForNextRun(nonAffectedTests);
         }
         long endUpdate = System.currentTimeMillis();
-        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] STARTS-MOJO-UPDATE-TIME: " + Writer.millsToSeconds(endUpdate - startUpdate));
+        getLogger().log(LogLevel.LIFECYCLE, "[PROFILE] STARTS-TASK-UPDATE-TIME: " + Writer.millsToSeconds(endUpdate - startUpdate));
         return affectedTests;
-    }
-
-    private void printSet(String name, Set<String> set) {
-        for (String s : set) {
-            getLogger().log(LogLevel.LIFECYCLE, "[" + name + "] " + s);
-        }
     }
 }

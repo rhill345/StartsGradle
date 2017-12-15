@@ -1,9 +1,8 @@
 package edu.illinois.starts.jdeps;
 
 import edu.illinois.starts.enums.DependencyFormat;
-import org.gradle.api.Project;
 
-import java.util.Map;
+import java.io.File;
 
 /**
  * Created by randy on 10/8/17.
@@ -13,8 +12,7 @@ public class StartsPluginExtension {
     /**
      * Set this to "false" to not filter out "sun.*" and "java.*" classes from jdeps parsing.
      */
-   private boolean filterLib = false;
-
+    private boolean filterLib = false;
 
     public DependencyFormat getDepFormat() {
         return depFormat;
@@ -26,18 +24,17 @@ public class StartsPluginExtension {
      * @see edu.illinois.starts.enums.DependencyFormat */
     protected DependencyFormat depFormat = DependencyFormat.ZLC;
 
-
     /**
      * Path to directory that contains the result of running jdeps on third-party
      * and standard library jars that an application may need, e.g., those in M2_REPO.
      */
-    protected String graphCache = "${basedir}${file.separator}jdeps-cache";
+    protected String graphCache = "jdeps-cache";
 
     /**
      * Set this to "false" to not print the graph obtained from jdeps parsing.
      * When "true" the graph is written to file after the run.
      */
-   protected boolean printGraph = false;
+   protected boolean printGraph = true;
 
     /**
      * Output filename for the graph, if printGraph == true.
@@ -49,28 +46,27 @@ public class StartsPluginExtension {
      */
     protected String loggingLevel = "CONFIG";
 
-
     /**
      * Set this to "false" to disable smart hashing, i.e., to *not* strip
      * Bytecode files of debug info prior to computing checksums. See the "Smart
      * Checksums" Sections in the Ekstazi paper:
      * http://dl.acm.org/citation.cfm?id=2771784
      */
-    protected boolean cleanBytes;
+    protected boolean cleanBytes = true;
 
     /**
      * Set this to "true" to update test dependencies on disk. The default value of "false"
      * is useful for "dry runs" where one may want to see the diff without updating
      * the test dependencies.
      */
-    private boolean updateDiffChecksums = true;
+    private boolean updateDiffChecksums;
 
     /**
      * Set this to "false" to prevent checksums from being persisted to disk. This
      * is useful for "dry runs" where one may want to see the non-affected tests that
      * STARTS writes to the Surefire excludesFile, without updating test dependencies.
      */
-    protected boolean updateRunChecksums;
+    protected boolean updateRunChecksums = true;
 
     /**
      * Set this option to "true" to run all tests, not just the affected ones. This option is useful
@@ -83,114 +79,45 @@ public class StartsPluginExtension {
      */
     protected boolean retestAll;
 
-
     /**
      * Set this to "true" to update test dependencies on disk. The default value of "false"
      * is useful for "dry runs" where one may want to see the diff without updating
      * the test dependencies.
      */
-    private boolean updateImpactedChecksums = false;
+    private boolean updateImpactedChecksums;
 
     /**
      * Set to "true" to print newly-added classes: classes in the program that were not in the previous version.
      */
     private boolean trackNewClasses = false;
 
-    public StartsPluginExtension(Project project) {
-
-        Map<String, ?> properties = project.getProperties();
-        if(properties.containsKey("filterLib")){
-            filterLib = (Boolean) properties.get("filterLib");
-        }
-
-        if(properties.containsKey("depFormat")){
-            depFormat = (DependencyFormat) properties.get("depFormat");
-        }
-
-        if(properties.containsKey("graphCache")){
-            graphCache = (String) properties.get("graphCache");
-        }
-
-        if(properties.containsKey("graph")){
-            graphFile = (String) properties.get("graph");
-        }
-
-        if(properties.containsKey("startsLogging")){
-            loggingLevel = (String) properties.get("startsLogging");
-        }
-
-        if(properties.containsKey("cleanBytes")){
-            cleanBytes = (Boolean) properties.get("cleanBytes");
-        }
-
-        if(properties.containsKey("updateDiffChecksums")){
-            updateDiffChecksums = (Boolean) properties.get("updateDiffChecksums");
-        }
-
-        if(properties.containsKey("updateRunChecksums")){
-            updateRunChecksums = (Boolean) properties.get("updateRunChecksums");
-        }
-
-        if(properties.containsKey("retestAll")){
-            retestAll = (Boolean) properties.get("retestAll");
-        }
-
-        if(properties.containsKey("trackNewClasses")){
-            trackNewClasses = (Boolean) properties.get("trackNewClasses");
-        }
-
-        if(properties.containsKey("updateImpactedChecksums")){
-            updateImpactedChecksums = (Boolean) properties.get("updateImpactedChecksums");
-        }
-
-
-    }
+    public StartsPluginExtension() {}
 
     public boolean getFilterLib() {
         return filterLib;
     }
 
-    public void setFilterLib(boolean filterLib) {
-        this.filterLib = filterLib;
-    }
-
-    public String getGraphCache() {
-        return graphCache;
-    }
-
-    public void setGraphCache(String graphCache) {
-        this.graphCache = graphCache;
+    public String getGraphCache(String baseDir) {
+        return baseDir + File.separator + graphCache;
     }
 
     public boolean getPrintGraph() {
         return printGraph;
     }
 
-    public void setPrintGraph(boolean printGraph) {
-        this.printGraph = printGraph;
-    }
-
     public String getGraphFile() {
         return graphFile;
-    }
-
-    public void setGraphFile(String graphFile) {
-        this.graphFile = graphFile;
     }
 
     public String getLoggingLevel() {
         return loggingLevel;
     }
 
-    public void setLoggingLevel(String loggingLevel) {
-        this.loggingLevel = loggingLevel;
-    }
-
-    public boolean isUpdateRunChecksums() {
+    public boolean getUpdateRunChecksums() {
         return updateRunChecksums;
     }
 
-    public boolean isRetestAll() {
+    public boolean getRetestAll() {
         return retestAll;
     }
 
@@ -202,11 +129,59 @@ public class StartsPluginExtension {
         return updateDiffChecksums;
     }
 
-    public boolean isUpdateImpactedChecksums() {
+    public boolean getUpdateImpactedChecksums() {
         return updateImpactedChecksums;
     }
 
-    public boolean isTrackNewClasses() {
+    public boolean getTrackNewClasses() {
         return trackNewClasses;
+    }
+
+    public void setFilterLib(boolean filterLib) {
+        this.filterLib = filterLib;
+    }
+
+    public void setDepFormat(DependencyFormat depFormat) {
+        this.depFormat = depFormat;
+    }
+
+    public void setGraphCache(String graphCache) {
+        this.graphCache = graphCache;
+    }
+
+    public void setPrintGraph(boolean printGraph) {
+        this.printGraph = printGraph;
+    }
+
+    public void setGraphFile(String graphFile) {
+        this.graphFile = graphFile;
+    }
+
+    public void setLoggingLevel(String loggingLevel) {
+        this.loggingLevel = loggingLevel;
+    }
+
+    public void setCleanBytes(boolean cleanBytes) {
+        this.cleanBytes = cleanBytes;
+    }
+
+    public void setUpdateDiffChecksums(boolean updateDiffChecksums) {
+        this.updateDiffChecksums = updateDiffChecksums;
+    }
+
+    public void setUpdateRunChecksums(boolean updateRunChecksums) {
+        this.updateRunChecksums = updateRunChecksums;
+    }
+
+    public void setRetestAll(boolean retestAll) {
+        this.retestAll = retestAll;
+    }
+
+    public void setUpdateImpactedChecksums(boolean updateImpactedChecksums) {
+        this.updateImpactedChecksums = updateImpactedChecksums;
+    }
+
+    public void setTrackNewClasses(boolean trackNewClasses) {
+        this.trackNewClasses = trackNewClasses;
     }
 }
