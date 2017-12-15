@@ -48,7 +48,6 @@ abstract class BaseTask extends DefaultTask {
                 // If still null, create a new extension object with defaults.
                 mExtension = new StartsPluginExtension(getProject());
             }
-            getLogger().log(LogLevel.LIFECYCLE, "GET EXTENDTION" + mExtension.getGraphCache(""));
         }
         return mExtension;
     }
@@ -57,8 +56,6 @@ abstract class BaseTask extends DefaultTask {
     public void executeTask() throws Exception {
         // Load test classes prior to excludes.
         getTestClasses("executeTask");
-
-        getExtension();
 
         // perform task action
         performTask();
