@@ -32,7 +32,7 @@ Change the gradle.settings to add the configuration for the STARTS plugin:
 2. `cd starts`
 3. `gradle install`
 
-## Using the STARTS Maven Plugin
+## Using the STARTS Gradle Plugin
 
 ### Available Options
 
