@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Gradle: org.apache.maven.surefire:surefire-booter:2.19.1">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/maven/surefire/surefire-booter/2.19.1/surefire-booter-2.19.1.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
