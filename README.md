@@ -1,7 +1,7 @@
 # STARTS (*STA*tic *R*egression *T*est *S*election) Overview
 
 
-STARTS is a tool for static class-level regression test selection tool
+This is a gradle port of the maven STARTS tool.  STARTS is a tool for static class-level regression test selection tool
 for Gradle-based Java and Android programs.
 
 ## Prerequisites
@@ -47,7 +47,7 @@ Change the gradle.settings to add the configuration for the STARTS plugin:
 time STARTS was run: `gradlew startsImpacted`
 
 3. To see the **tests** that are affected by the most recent changes:
-`gradlew starts:select`
+`gradlew startsSelect`
 
 4. To perform RTS using STARTS (i.e., select tests and run the
 selected tests): `gradlew starts`
