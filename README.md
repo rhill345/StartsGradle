@@ -1,7 +1,7 @@
 # STARTS (*STA*tic *R*egression *T*est *S*election) Overview
 
 
-This is a gradle port of the maven STARTS tool.  STARTS is a tool for static class-level regression test selection tool
+This is a gradle port of the maven STARTS tool.  STARTS is a tool for static class-level regression test selection, extended
 for Gradle-based Java and Android programs.
 
 ## Prerequisites
